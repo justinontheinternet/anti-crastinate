@@ -1,0 +1,18 @@
+{
+  "manifest_version": 2,
+
+  "name": "Anti-crastinate",
+  "description": "Limits the number of times you can access social media sites in a day.",
+  "version": "1.0",
+
+  "page_action": {
+    "default_icon": "",
+    "default_popup": "popup.html",
+    "default_title": "Anti-crastinate"
+  },
+
+  "permissions": [
+    "activeTab",
+    "history"
+  ]
+}
