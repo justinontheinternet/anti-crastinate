@@ -5,14 +5,27 @@
   "description": "Limits the number of times you can access social media sites in a day.",
   "version": "1.0",
 
-  "page_action": {
-    "default_icon": "",
+  "browser_action": {
+    "default_icon": "icon.png",
     "default_popup": "popup.html",
     "default_title": "Anti-crastinate"
   },
 
+  "content_scripts": [
+    {
+      "matches": [
+        "https://www.facebook.com/*",
+        "https://twitter.com/*"
+      ],
+      "js": [ "anti-crastinate_cs.js" ],
+      "run_at": "document_start"
+    }
+
+  ],
+
   "permissions": [
-    "activeTab",
-    "history"
+    "tabs",
+    "storage", 
+    "*://*.facebook.com/"
   ]
 }
