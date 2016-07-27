@@ -3,27 +3,24 @@
 
 
 var currentUrl = document.location.host;
-var currentTime = new Date();
-var data = { date: currentTime.toString() };
-
+var currentTime = Date.parse(new Date());
 
 switch(currentUrl) {
   case "www.facebook.com":
     chrome.storage.sync.get('lastFacebookVisit', function(info) {
 
-      var oldTime, newTime, difference;
-      console.log(info.lastFacebookVisit);
+      var oldTime, difference;
 
       if (info.lastFacebookVisit) {
-        oldTime = Date.parse(info.lastFacebookVisit);
-        newTime = Date.parse(currentTime);
-        console.log("oldTime:", oldTime, "newTime:", newTime);
-        difference = ((newTime - oldTime) / 1000) / 60;
+        console.log("in if", info.lastFacebookVisit);
+        oldTime = info.lastFacebookVisit;
+        console.log("oldTime:", oldTime, "newTime:", currentTime);
+        difference = ((currentTime - oldTime) / 1000) / 60;
         console.log("difference value:", difference);
 
-        if (difference > 20 && difference <= 30) {
+        if (difference > 20 && difference <= 180) {
           console.log("inside if, difference is:", difference);
-          var fbTimeRemaining = 30 - difference;
+          var fbTimeRemaining = 180 - difference;
           chrome.storage.sync.set({ 'fbTimeRemaining': fbTimeRemaining });
           window.location.href = 'http://google.com';
         } else if (difference > 180) {
@@ -32,25 +29,25 @@ switch(currentUrl) {
         }
         
       } else {
-        chrome.storage.sync.set({ 'lastFacebookVisit': data.date });
+        console.log("inside else");
+        chrome.storage.sync.set({ 'lastFacebookVisit': currentTime });
       }
     });
     break;
   case "twitter.com":
     chrome.storage.sync.get('lastTwitterVisit', function(info) {
-      var oldTime, newTime, difference;
-      console.log(info.lastTwitterVisit);
+      var oldTime, difference;
 
       if (info.lastTwitterVisit) {
-        oldTime = Date.parse(info.lastTwitterVisit);
-        newTime = Date.parse(currentTime);
-        console.log("oldTime:", oldTime, "newTime:", newTime);
-        difference = ((newTime - oldTime) / 1000) / 60;
+        console.log("in if", info.lastTwitterVisit);
+        oldTime = info.lastTwitterVisit;
+        console.log("oldTime:", oldTime, "newTime:", currentTime);
+        difference = ((currentTime - oldTime) / 1000) / 60;
         console.log("difference value:", difference);
 
         if (difference > 20 && difference <= 180) {
           console.log("inside if, difference is:", difference);
-          var twTimeRemaining = 30 - difference;
+          var twTimeRemaining = 180 - difference;
           chrome.storage.sync.set({ 'twTimeRemaining': twTimeRemaining });
           window.location.href = 'http://google.com';
         } else if (difference > 180) {
@@ -59,7 +56,8 @@ switch(currentUrl) {
         }
         
       } else {
-        chrome.storage.sync.set({ 'lastTwitterVisit': data.date });
+        console.log("inside else");
+        chrome.storage.sync.set({ 'lastTwitterVisit': currentTime });
       }
     });
     break;
