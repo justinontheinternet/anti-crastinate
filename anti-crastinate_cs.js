@@ -21,8 +21,10 @@ switch(currentUrl) {
         difference = ((newTime - oldTime) / 1000) / 60;
         console.log("difference value:", difference);
 
-        if (difference >= 20 && difference <= 180) {
+        if (difference > 20 && difference <= 30) {
           console.log("inside if, difference is:", difference);
+          var fbTimeRemaining = 30 - difference;
+          chrome.storage.sync.set({ 'fbTimeRemaining': fbTimeRemaining });
           window.location.href = 'http://google.com';
         } else if (difference > 180) {
           console.log("inside else if");
@@ -36,7 +38,29 @@ switch(currentUrl) {
     break;
   case "twitter.com":
     chrome.storage.sync.get('lastTwitterVisit', function(info) {
-      console.log("twitterrrrrr");
+      var oldTime, newTime, difference;
+      console.log(info.lastTwitterVisit);
+
+      if (info.lastTwitterVisit) {
+        oldTime = Date.parse(info.lastTwitterVisit);
+        newTime = Date.parse(currentTime);
+        console.log("oldTime:", oldTime, "newTime:", newTime);
+        difference = ((newTime - oldTime) / 1000) / 60;
+        console.log("difference value:", difference);
+
+        if (difference > 20 && difference <= 180) {
+          console.log("inside if, difference is:", difference);
+          var twTimeRemaining = 30 - difference;
+          chrome.storage.sync.set({ 'twTimeRemaining': twTimeRemaining });
+          window.location.href = 'http://google.com';
+        } else if (difference > 180) {
+          console.log("inside else if");
+          chrome.storage.sync.set({ 'lastTwitterVisit': newTime });
+        }
+        
+      } else {
+        chrome.storage.sync.set({ 'lastTwitterVisit': data.date });
+      }
     });
     break;
 }
