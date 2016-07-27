@@ -1,58 +1,73 @@
-// DECLARE VARIABLES
-var facebook = "https://www.facebook.com/";
-var twitter = "https://twitter.com/";
-
-var facebookVisits, twitterVisits;
-
-
-// DEFINE FUNCTIONS
-
-function countVisits(url) {
-  switch(url) {
-    case facebook:
-      console.log("1 for facebook");
-      facebookVisits += 1;
-      break;
-    case twitter:
-    console.log("1 for twitter");
-      twitterVisits += 1;
-      break;
-    default:
-      console.log("default");
-      break;
-  }
-}
-
-function getCurrentTabUrl(countVisits) {
-
-  var tabQueryInfo = {
-    active: true,
-    currentWindow: true
-  };
-
-  chrome.tabs.query(tabQueryInfo, function(tabs) {
-    var tab = tabs[0];
-    var url = tab.url;
-
-    if (url) {
-      countVisits(url);
-      var address = document.getElementById('address');
-      var fbCount = document.getElementById('fb-count');
-      var twCount = document.getElementById('tw-count');
-      address.innerHTML = url;
-      fbCount.innerHTML = facebookVisits.toString();
-      twCount.innerHTML = twitterVisits.toString();
-    }
+function sendStatus(status) {
+  console.log("sending message");
+  chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
+    chrome.tabs.sendMessage(tabs[0].id, { active: status });
   });
 }
 
-
-
-
-
-
-
-
 document.addEventListener('DOMContentLoaded', function() {
-  getCurrentTabUrl(countVisits);
+  var button = document.getElementById('toggle-switch');
+  var turnOn = "Turn on";
+  var turnOff = "Turn off";
+  var status;
+  
+  // find out whether the extension is active
+  chrome.storage.sync.get('active', function(data) {
+    // if there is no value, set it to active
+    if (!data.active) {
+      status = true;
+      chrome.storage.sync.set({ 'active': status });
+      sendStatus(status);
+    }
+  });
+
+
+  button.addEventListener('click', function() {
+    if (button.innerHTML === turnOff) {
+      status = false;
+      chrome.storage.sync.set({ 'active': status })
+      sendStatus(status);
+      button.innerHTML = turnOn;
+    } else {
+      status = true;
+      chrome.storage.sync.set({ 'active': status });
+      sendStatus(status);
+      button.innerHTML = turnOff;
+    }
+  })
 });
+
+
+
+
+
+
+
+
+
+
+
+// // DEFINE FUNCTIONS
+
+// function getCurrentTabUrl(countVisits) {
+
+//   var tabQueryInfo = {
+//     active: true,
+//     currentWindow: true
+//   };
+
+//   chrome.tabs.query(tabQueryInfo, function(tabs) {
+//     var tab = tabs[0];
+//     var url = tab.url;
+
+//     if (url) {
+//       countVisits(url);
+//       var address = document.getElementById('address');
+//       var fbCount = document.getElementById('fb-count');
+//       var twCount = document.getElementById('tw-count');
+//       address.innerHTML = url;
+//       fbCount.innerHTML = facebookVisits.toString();
+//       twCount.innerHTML = twitterVisits.toString();
+//     }
+//   });
+// }
