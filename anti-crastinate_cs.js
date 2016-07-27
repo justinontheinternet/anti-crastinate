@@ -6,6 +6,7 @@ var currentUrl = document.location.host;
 var currentTime = Date.parse(new Date());
 
 function blockSites() {
+  console.log("inside blockSites", currentUrl);
   switch(currentUrl) {
     case "www.facebook.com":
       chrome.storage.sync.get('lastFacebookVisit', function(info) {
@@ -67,10 +68,11 @@ function blockSites() {
 }
 
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
-  console.log("received message", request);
-  // if (request.active == true) {
-  //   console.log(request);
-  // }
+  console.log("received message:");
+  if (request.active == true) {
+    console.log("inside if:", request);
+    blockSites();
+  }
 });
 
 // visit site
