@@ -9,16 +9,24 @@ var data = { date: currentTime.toString() };
 
 switch(currentUrl) {
   case "www.facebook.com":
-    chrome.storage.sync.get('lastFacebookVisit', function(site) {
+    chrome.storage.sync.get('lastFacebookVisit', function(info) {
 
-      var oldTime;
-      if (site.lastFacebookVisit) {
-        oldTime = Date.parse(site.lastFacebookVisit.date);
-        var newTime = Date.parse(currentTime);
-        var diff = ((newTime - oldTime) / 1000) / 60;
+      var oldTime, newTime, difference;
+      console.log(info.lastFacebookVisit);
 
-        if (diff > 30) {
+      if (info.lastFacebookVisit) {
+        oldTime = Date.parse(info.lastFacebookVisit);
+        newTime = Date.parse(currentTime);
+        console.log("oldTime:", oldTime, "newTime:", newTime);
+        difference = ((newTime - oldTime) / 1000) / 60;
+        console.log("difference value:", difference);
+
+        if (difference >= 20 && difference <= 180) {
+          console.log("inside if, difference is:", difference);
           window.location.href = 'http://google.com';
+        } else if (difference > 180) {
+          console.log("inside else if");
+          chrome.storage.sync.set({ 'lastFacebookVisit': newTime });
         }
         
       } else {
@@ -27,7 +35,7 @@ switch(currentUrl) {
     });
     break;
   case "twitter.com":
-    chrome.storage.sync.get('lastTwitterVisit', function(site) {
+    chrome.storage.sync.get('lastTwitterVisit', function(info) {
       console.log("twitterrrrrr");
     });
     break;
