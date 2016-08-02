@@ -1,0 +1,9 @@
+h3 {
+  display: inline-block;
+  padding-right: 3px;
+}
+
+p {
+  display: inline-block;
+  padding-left: 3px;
+}

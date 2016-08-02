@@ -60,8 +60,6 @@ function blockSites() {
 
 // when no message from popup, run check and blockSites()
 chrome.storage.sync.get('active', function(data) {
-  console.log("initial check");
-  console.log("data.active:", data.active);
   if (data.active === true || data.active === undefined) {
     blockSites();
   }
@@ -69,8 +67,6 @@ chrome.storage.sync.get('active', function(data) {
 
 // when button is clicked in popup, listen for message sent.
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
-  console.log("popup opened");
-  console.log("request.active:", request.active);
   if (request.active == true) {
     blockSites();
   }

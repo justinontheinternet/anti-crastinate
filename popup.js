@@ -1,5 +1,4 @@
-function sendStatus(status) {
-  console.log("sendStatus called. sending message from popup.js");
+function sendStatus(status) {  
   chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
     chrome.tabs.sendMessage(tabs[0].id, { active: status });
   });
@@ -10,38 +9,30 @@ document.addEventListener('DOMContentLoaded', function() {
   var turnOn = "Turn on";
   var turnOff = "Turn off";
   var status;
-  
-  console.log('step 1: popup loaded. variables set.');
+    
   // find out whether the extension is active
-  chrome.storage.sync.get('active', function(data) {
-    console.log("step 2: data.active is", data.active);
+  chrome.storage.sync.get('active', function(data) {    
     // if there is no value, set it to active
-    if (data.active === undefined) {
-      console.log("step 3a. no data.active value");
+    if (data.active === undefined) {      
       status = true;
       chrome.storage.sync.set({ 'active': status });
       button.innerHTML = turnOff;
       // sendStatus(status);
-    } else if (data.active === true) {
-      console.log("step 3b. data.active === true");
+    } else if (data.active === true) {      
       button.innerHTML = turnOff;
-    } else {
-      console.log("step 3c. data.active === false (else)");
+    } else {      
       status === false;
       button.innerHTML = turnOn;
     }
   });
 
-  button.addEventListener('click', function() {
-    console.log("step 4 checking for button value");
-    if (button.innerHTML === turnOff) {
-      console.log("step 4a: button value is turnOff");
+  button.addEventListener('click', function() {    
+    if (button.innerHTML === turnOff) {      
       status = false;
       chrome.storage.sync.set({ 'active': status });
       sendStatus(status);
       button.innerHTML = turnOn;
-    } else {
-      console.log("step 4b button value is turnOn");
+    } else {      
       status = true;
       chrome.storage.sync.set({ 'active': status });
       sendStatus(status);
