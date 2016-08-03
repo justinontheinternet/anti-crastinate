@@ -24,8 +24,7 @@ function blockSites() {
           if (difference > visitLimit && difference <= blockLimit) {
             var fbTimeRemaining = blockLimit - difference;
             chrome.storage.sync.set({ 'fbTimeRemaining': fbTimeRemaining });
-            // fix redirect (look up programmatic injection?)
-            window.location.href = 'http://google.com';
+            chrome.runtime.sendMessage({ redirect: true });
           } else if (difference > blockLimit) {
             chrome.storage.sync.set({ 'lastFacebookVisit': currentTime });
           }
@@ -38,7 +37,6 @@ function blockSites() {
     case "twitter.com":
       chrome.storage.sync.get('lastTwitterVisit', function(info) {
         var oldTime, difference;
-
         if (info.lastTwitterVisit) {
           oldTime = info.lastTwitterVisit;
           difference = ((currentTime - oldTime) / 1000) / 60;
@@ -46,7 +44,7 @@ function blockSites() {
           if (difference > visitLimit && difference <= blockLimit) {
             var twTimeRemaining = blockLimit - difference;
             chrome.storage.sync.set({ 'twTimeRemaining': twTimeRemaining });
-            window.location.href = 'http://google.com';
+            chrome.runtime.sendMessage({ redirect: true });
           } else if (difference > blockLimit) {
             chrome.storage.sync.set({ 'lastTwitterVisit': currentTime });
           }
