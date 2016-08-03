@@ -9,7 +9,7 @@
 var currentUrl = document.location.host;
 var currentTime = Date.parse(new Date());
 var visitLimit, blockLimit;
-
+// MAKE blockSites MORE DRY?
 function blockSites() {
   switch(currentUrl) {
     case "www.facebook.com":
@@ -21,12 +21,12 @@ function blockSites() {
           oldTime = info.lastFacebookVisit;
           difference = ((currentTime - oldTime) / 1000) / 60;
 
-          if (difference > 20 && difference <= 180) {
-            var fbTimeRemaining = 180 - difference;
+          if (difference > visitLimit && difference <= blockLimit) {
+            var fbTimeRemaining = blockLimit - difference;
             chrome.storage.sync.set({ 'fbTimeRemaining': fbTimeRemaining });
             // fix redirect (look up programmatic injection?)
             window.location.href = 'http://google.com';
-          } else if (difference > 180) {
+          } else if (difference > blockLimit) {
             chrome.storage.sync.set({ 'lastFacebookVisit': currentTime });
           }
           
@@ -43,11 +43,11 @@ function blockSites() {
           oldTime = info.lastTwitterVisit;
           difference = ((currentTime - oldTime) / 1000) / 60;
 
-          if (difference > 20 && difference <= 180) {
-            var twTimeRemaining = 180 - difference;
+          if (difference > visitLimit && difference <= blockLimit) {
+            var twTimeRemaining = blockLimit - difference;
             chrome.storage.sync.set({ 'twTimeRemaining': twTimeRemaining });
             window.location.href = 'http://google.com';
-          } else if (difference > 180) {
+          } else if (difference > blockLimit) {
             chrome.storage.sync.set({ 'lastTwitterVisit': currentTime });
           }
           
@@ -61,25 +61,18 @@ function blockSites() {
 
 // get time limit values
 chrome.storage.sync.get(['visitLimit', 'blockLimit'], function(data) {
-  console.log("in limits get");
   if (!data.visitLimit) {
-    console.log("data.visitLimit has no value:", !data.visitLimit);
-    visitLimit = '20';
+    visitLimit = 20;
     chrome.storage.sync.set({'visitLimit': '20'});
   } else {
-    console.log("data.visitLimit has a value:", data.visitLimit);
     visitLimit = parseInt(data.visitLimit);
-    console.log("visitLimit is:", visitLimit);
   }
 
   if (!data.blockLimit) {
-    console.log("data.blockLimit has no value:", !data.blockLimit);
-    blockLimit = '180';
+    blockLimit = 180;
     chrome.storage.sync.set({'blockLimit': '180'});
   } else {
-    console.log("data.blockLimit has a value:", data.blockLimit);
     blockLimit = parseInt(data.blockLimit);
-    console.log("blockLimit is:", blockLimit);
   }
 });
 

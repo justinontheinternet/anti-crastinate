@@ -7,3 +7,7 @@ p {
   display: inline-block;
   padding-left: 3px;
 }
+
+input {
+  width: 60px;
+}
