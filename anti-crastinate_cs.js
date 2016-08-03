@@ -8,6 +8,7 @@
 
 var currentUrl = document.location.host;
 var currentTime = Date.parse(new Date());
+var visitLimit, blockLimit;
 
 function blockSites() {
   switch(currentUrl) {
@@ -57,6 +58,30 @@ function blockSites() {
       break;
   }
 }
+
+// get time limit values
+chrome.storage.sync.get(['visitLimit', 'blockLimit'], function(data) {
+  console.log("in limits get");
+  if (!data.visitLimit) {
+    console.log("data.visitLimit has no value:", !data.visitLimit);
+    visitLimit = '20';
+    chrome.storage.sync.set({'visitLimit': '20'});
+  } else {
+    console.log("data.visitLimit has a value:", data.visitLimit);
+    visitLimit = parseInt(data.visitLimit);
+    console.log("visitLimit is:", visitLimit);
+  }
+
+  if (!data.blockLimit) {
+    console.log("data.blockLimit has no value:", !data.blockLimit);
+    blockLimit = '180';
+    chrome.storage.sync.set({'blockLimit': '180'});
+  } else {
+    console.log("data.blockLimit has a value:", data.blockLimit);
+    blockLimit = parseInt(data.blockLimit);
+    console.log("blockLimit is:", blockLimit);
+  }
+});
 
 // when no message from popup, run check and blockSites()
 chrome.storage.sync.get('active', function(data) {
