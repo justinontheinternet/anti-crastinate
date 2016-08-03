@@ -24,7 +24,6 @@ document.addEventListener('DOMContentLoaded', function() {
   });
 // factor in when people leave value blank.
 submit.addEventListener('click', function() {
-  console.log('submit clicked');
   var newVisitLimit, newBlockLimit;
 
   if (!visitInput.value || visitInput.value < 1 || !blockInput.value || blockInput.value < 1) {
@@ -37,7 +36,6 @@ submit.addEventListener('click', function() {
 });
 
 reset.addEventListener('click', function() {
-  console.log('reset clicked');
   defaultVisitLimit = '20';
   defaultBlockLimit = '180';
   chrome.storage.sync.set({'visitLimit': defaultVisitLimit, 'blockLimit': defaultBlockLimit});
