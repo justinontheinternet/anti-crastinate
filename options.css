@@ -11,3 +11,7 @@ p {
 input {
   width: 60px;
 }
+
+#error {
+  color: red;
+}

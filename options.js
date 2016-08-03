@@ -1,8 +1,11 @@
-var visitLimit, blockLimit;
-
 document.addEventListener('DOMContentLoaded', function() {
   var visitInput = document.getElementById('visit-limit');
   var blockInput = document.getElementById('block-limit');
+  var submit = document.getElementById('submit');
+  var reset = document.getElementById('reset');
+  var error = document.getElementById('error');
+
+  var errorMessage = "Please make sure all fields have a value greater than 0.";
 
   chrome.storage.sync.get(['visitLimit', 'blockLimit'], function(data) {
     if (!data.visitLimit) {
@@ -19,5 +22,27 @@ document.addEventListener('DOMContentLoaded', function() {
       blockInput.value = data.blockLimit;
     }
   });
+// factor in when people leave value blank.
+submit.addEventListener('click', function() {
+  console.log('submit clicked');
+  var newVisitLimit, newBlockLimit;
+
+  if (!visitInput.value || visitInput.value < 1 || !blockInput.value || blockInput.value < 1) {
+    error.innerHTML = errorMessage;
+  } else {
+    newVisitLimit = visitInput.value;
+    newBlockLimit = blockInput.value;
+    chrome.storage.sync.set({'visitLimit': newVisitLimit, 'blockLimit': newBlockLimit})
+  }
+});
+
+reset.addEventListener('click', function() {
+  console.log('reset clicked');
+  defaultVisitLimit = '20';
+  defaultBlockLimit = '180';
+  chrome.storage.sync.set({'visitLimit': defaultVisitLimit, 'blockLimit': defaultBlockLimit});
+  visitInput.value = defaultVisitLimit;
+  blockInput.value = defaultBlockLimit;
+});
 
 });
