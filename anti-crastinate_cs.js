@@ -20,6 +20,10 @@ function blockSites() {
         if (info.lastFacebookVisit) {
           oldTime = info.lastFacebookVisit;
           difference = ((currentTime - oldTime) / 1000) / 60;
+          
+          if (visitLimit - difference < 5) {
+            chrome.runtime.sendMessage( { notify: true });
+          }
 
           if (difference > visitLimit && difference <= blockLimit) {
             var fbTimeRemaining = blockLimit - difference;
@@ -40,6 +44,10 @@ function blockSites() {
         if (info.lastTwitterVisit) {
           oldTime = info.lastTwitterVisit;
           difference = ((currentTime - oldTime) / 1000) / 60;
+
+          if (visitLimit - difference < 5) {
+            chrome.runtime.sendMessage( { notify: true });
+          }
 
           if (difference > visitLimit && difference <= blockLimit) {
             var twTimeRemaining = blockLimit - difference;

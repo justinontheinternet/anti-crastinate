@@ -1,5 +1,4 @@
 document.addEventListener('DOMContentLoaded', function() {
-  console.log("message.js");
   var message = document.getElementById('message');
   var messages = [
     "Stop stalling.",

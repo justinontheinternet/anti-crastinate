@@ -32,7 +32,7 @@
 
   "permissions": [
     "tabs",
-    "storage", 
-    "*://*.facebook.com/"
+    "storage",
+    "notifications"
   ]
 }
