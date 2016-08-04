@@ -31,7 +31,9 @@ submit.addEventListener('click', function() {
   } else {
     newVisitLimit = visitInput.value;
     newBlockLimit = blockInput.value;
-    chrome.storage.sync.set({'visitLimit': newVisitLimit, 'blockLimit': newBlockLimit})
+    chrome.storage.sync.set({'visitLimit': newVisitLimit, 'blockLimit': newBlockLimit}, function() {
+      message("settings saved");
+    });
   }
 });
 

@@ -9,7 +9,41 @@
 var currentUrl = document.location.host;
 var currentTime = Date.parse(new Date());
 var visitLimit, blockLimit;
-// MAKE blockSites MORE DRY?
+
+// attempting to make blockSites more DRY
+function determineAccess(key) {
+  chrome.storage.sync.get(key, function(info) {
+    console.log("inside determineAccess", key, info);
+    var oldTime, difference;
+
+    if (info[key]) {
+      oldTime = info[key];
+      difference = ((currentTime - oldTime) / 1000) / 60;
+      console.log("info[key] exists:", info[key], "oldTime:", oldTime);
+      if (visitLimit - difference < 5 && visitLimit - difference > 0) {
+        console.log("sending notification");
+        chrome.runtime.sendMessage( { notify: true });
+      }
+
+      if (difference > visitLimit && difference <= blockLimit) {
+        console.log("restricting access");
+        // var fbTimeRemaining = blockLimit - difference;
+        // chrome.storage.sync.set({ 'fbTimeRemaining': fbTimeRemaining });
+        chrome.runtime.sendMessage({ redirect: true });
+      } else if (difference > blockLimit) {
+        console.log("allow visit");
+        chrome.storage.sync.set({ key : currentTime });
+      }
+      
+    } else {
+      console.log("first visit");
+      chrome.storage.sync.set({ key : currentTime });
+    }
+  });
+}
+
+
+// setting key for each site on block list
 function blockSites() {
   switch(currentUrl) {
     case "www.facebook.com":
