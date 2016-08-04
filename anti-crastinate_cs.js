@@ -21,7 +21,7 @@ function blockSites() {
           oldTime = info.lastFacebookVisit;
           difference = ((currentTime - oldTime) / 1000) / 60;
           
-          if (visitLimit - difference < 5) {
+          if (visitLimit - difference < 5 && visitLimit - difference > 0) {
             chrome.runtime.sendMessage( { notify: true });
           }
 
