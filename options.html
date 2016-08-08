@@ -6,10 +6,21 @@
   <script src="options.js"></script>
 </head>
 <body>
-  <h3>Visit Length:</h3><input type="text" id="visit-limit" /><p>min</p><br>
-  <h3>Time Between Visits:</h3><input type="text" id="block-limit" /><p>min</p>
-  <button type="submit" id="submit">Save Changes</button>
-  <button type="reset" id="reset">Return to Defaults</button>
-  <p id="error"></p>
+  <div class="container">
+    <header>
+      <img src="icon.png" />
+      <h1>Anti-crastinate</h1>
+    </header>
+    <br>
+
+    <h2>Visit Length:</h2><input type="text" id="visit-limit" /><p>min</p><br>
+    <h2>Time Between Visits:</h2><input type="text" id="block-limit" /><p>min</p>
+    <br>
+    <div class="buttons">
+      <button type="submit" id="submit">Save Changes</button>
+      <button type="reset" id="reset">Return to Defaults</button>
+    </div>
+    <p id="error"></p>
+  </div>
 </body>
 </html>

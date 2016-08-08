@@ -25,15 +25,16 @@ document.addEventListener('DOMContentLoaded', function() {
 // factor in when people leave value blank.
 submit.addEventListener('click', function() {
   var newVisitLimit, newBlockLimit;
+  var inputOne = visitInput.value;
+  var inputTwo = blockInput.value;
 
-  if (!visitInput.value || visitInput.value < 1 || !blockInput.value || blockInput.value < 1) {
+  if ( !inputOne || inputOne < 1 || (isNaN(parseInt(inputOne))) || !inputTwo || inputTwo < 1 || (isNaN(parseInt(inputTwo))) ) {
     error.innerHTML = errorMessage;
   } else {
     newVisitLimit = visitInput.value;
     newBlockLimit = blockInput.value;
-    chrome.storage.sync.set({'visitLimit': newVisitLimit, 'blockLimit': newBlockLimit}, function() {
-      message("settings saved");
-    });
+    error.innerHTML = '';
+    chrome.storage.sync.set({'visitLimit': newVisitLimit, 'blockLimit': newBlockLimit});
   }
 });
 

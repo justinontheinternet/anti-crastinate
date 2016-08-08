@@ -1,0 +1,14 @@
+body {
+  margin: 0;
+  padding: 0;
+  background-color: #FCFCFC;
+}
+
+h1 {
+  max-width: 65%;
+  margin: auto;
+  padding-top: 25%;
+  font-family: impact;
+  font-size: 4em;
+  text-align: center;
+}

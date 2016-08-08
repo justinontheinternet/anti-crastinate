@@ -10,16 +10,18 @@ var currentUrl = document.location.host;
 var currentTime = Date.parse(new Date());
 var visitLimit, blockLimit;
 
-// attempting to make blockSites more DRY
-function determineAccess(key) {
-  chrome.storage.sync.get(key, function(info) {
-    console.log("inside determineAccess", key, info);
+// NOT CURRENTLY IMPLEMENTED. attempting to make blockSites more DRY. Issues with chrome.storage recognizing dynamic key names.
+function determineAccess(obj) {
+  chrome.storage.sync.get(obj, function(info) {
+    console.log("inside determineAccess obj is:", obj, "info is:", info);
+    console.log("info.key", info.key, "number?", typeof(info.key));
     var oldTime, difference;
-
-    if (info[key]) {
-      oldTime = info[key];
+    var lastSiteVisit = obj.key;
+    console.log("info.lastSiteVisit:", info.lastSiteVisit);
+    if (typeof(info.key) === 'number') {
+      oldTime = info.key;
       difference = ((currentTime - oldTime) / 1000) / 60;
-      console.log("info[key] exists:", info[key], "oldTime:", oldTime);
+      console.log("info.key exists:", info.key, "oldTime:", oldTime);
       if (visitLimit - difference < 5 && visitLimit - difference > 0) {
         console.log("sending notification");
         chrome.runtime.sendMessage( { notify: true });
@@ -31,13 +33,14 @@ function determineAccess(key) {
         // chrome.storage.sync.set({ 'fbTimeRemaining': fbTimeRemaining });
         chrome.runtime.sendMessage({ redirect: true });
       } else if (difference > blockLimit) {
-        console.log("allow visit");
+        console.log("allow visit. key is:", key);
         chrome.storage.sync.set({ key : currentTime });
       }
       
     } else {
-      console.log("first visit");
-      chrome.storage.sync.set({ key : currentTime });
+      console.log("first visit. lastSiteVisit is:", lastSiteVisit, "currentTime:", currentTime, "obj.key:", obj.key);
+      chrome.storage.sync.set({ lastSiteVisit : currentTime });
+      debugger;
     }
   });
 }
@@ -47,8 +50,15 @@ function determineAccess(key) {
 function blockSites() {
   switch(currentUrl) {
     case "www.facebook.com":
-      chrome.storage.sync.get('lastFacebookVisit', function(info) {
+    // Commented out section for use with determineAccess function above
+      // var obj = {};
+      // var prop = 'key';
+      // var key = 'lastFacebookVisit';
+      // obj[prop] = key;
 
+      // determineAccess(obj);
+
+      chrome.storage.sync.get('lastFacebookVisit', function(info) {
         var oldTime, difference;
 
         if (info.lastFacebookVisit) {

@@ -6,8 +6,8 @@ function sendStatus(status) {
 
 document.addEventListener('DOMContentLoaded', function() {
   var button = document.getElementById('toggle-switch');
-  var turnOn = "Turn on";
-  var turnOff = "Turn off";
+  var turnOn = "Enable";
+  var turnOff = "Disable";
   var status;
     
   // find out whether the extension is active
