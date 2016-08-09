@@ -65,12 +65,15 @@ function blockSites() {
           difference = ((currentTime - oldTime) / 1000) / 60;
           
           if (visitLimit - difference < 5 && visitLimit - difference > 0) {
-            chrome.runtime.sendMessage( { notify: true });
+            // send message to determine last url
+            // het last url host
+            // if last url host does not equal current url then send message to notify
+            chrome.runtime.sendMessage({ notify: true });
           }
 
           if (difference > visitLimit && difference <= blockLimit) {
-            var fbTimeRemaining = blockLimit - difference;
-            chrome.storage.sync.set({ 'fbTimeRemaining': fbTimeRemaining });
+            // var fbTimeRemaining = blockLimit - difference;
+            // chrome.storage.sync.set({ 'fbTimeRemaining': fbTimeRemaining });
             chrome.runtime.sendMessage({ redirect: true });
           } else if (difference > blockLimit) {
             chrome.storage.sync.set({ 'lastFacebookVisit': currentTime });
@@ -89,12 +92,12 @@ function blockSites() {
           difference = ((currentTime - oldTime) / 1000) / 60;
 
           if (visitLimit - difference < 5 && visitLimit - difference > 0) {
-            chrome.runtime.sendMessage( { notify: true });
+            chrome.runtime.sendMessage({ notify: true });
           }
 
           if (difference > visitLimit && difference <= blockLimit) {
-            var twTimeRemaining = blockLimit - difference;
-            chrome.storage.sync.set({ 'twTimeRemaining': twTimeRemaining });
+            // var twTimeRemaining = blockLimit - difference;
+            // chrome.storage.sync.set({ 'twTimeRemaining': twTimeRemaining });
             chrome.runtime.sendMessage({ redirect: true });
           } else if (difference > blockLimit) {
             chrome.storage.sync.set({ 'lastTwitterVisit': currentTime });

@@ -33,6 +33,7 @@
   "permissions": [
     "tabs",
     "storage",
-    "notifications"
+    "notifications",
+    "history"
   ]
 }
