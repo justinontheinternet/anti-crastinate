@@ -1,3 +1,5 @@
+/* DEFAULTS */
+
 body {
   margin: 0;
   padding: 0;
@@ -8,6 +10,8 @@ body {
   width: 65%;
   margin: 0 auto;
 }
+
+/* HEADER */
 
 header {
   height: 120px;
@@ -30,10 +34,21 @@ h1 {
   padding-left: 20px;
 }
 
+/* INPUTS */
+
 h2 {
   display: inline-block;
-  padding-left: 25%;
   padding-right: 5px;
+}
+
+input {
+  width: 60px;
+  height: 20px;
+}
+
+.inputs {
+  width: 400px;
+  margin: 0 auto;
 }
 
 p {
@@ -41,10 +56,7 @@ p {
   padding-left: 3px;
 }
 
-input {
-  width: 60px;
-  height: 20px;
-}
+/* BUTTONS */
 
 button {
   display: inline-block;
@@ -66,6 +78,12 @@ button:hover {
   padding-top: 30px;
 }
 
+/* ERROR MESSAGE */
+
 #error {
   color: red;
+  font-size: 15px;
+  width: 100%;
+  padding-top: 10px;
+  text-align: center;
 }

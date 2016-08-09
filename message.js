@@ -4,7 +4,7 @@ document.addEventListener('DOMContentLoaded', function() {
     "Stop stalling.",
     "Is it really that important right now?",
     "Get back to work.",
-    "Get work done now, and you can do this later.",
+    "Work now. This later.",
     "Really, dude?" 
   ]
 

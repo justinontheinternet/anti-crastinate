@@ -40,7 +40,6 @@ function determineAccess(obj) {
     } else {
       console.log("first visit. lastSiteVisit is:", lastSiteVisit, "currentTime:", currentTime, "obj.key:", obj.key);
       chrome.storage.sync.set({ lastSiteVisit : currentTime });
-      debugger;
     }
   });
 }

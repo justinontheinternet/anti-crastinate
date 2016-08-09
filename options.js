@@ -41,6 +41,7 @@ submit.addEventListener('click', function() {
 reset.addEventListener('click', function() {
   defaultVisitLimit = '20';
   defaultBlockLimit = '180';
+  error.innerHTML = '';
   chrome.storage.sync.set({'visitLimit': defaultVisitLimit, 'blockLimit': defaultBlockLimit});
   visitInput.value = defaultVisitLimit;
   blockInput.value = defaultBlockLimit;
