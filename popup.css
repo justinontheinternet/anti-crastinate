@@ -42,3 +42,11 @@ button:hover {
 .enable {
   background-color: green;
 }
+
+a {
+  display: block;
+  color: #908b8b;
+  text-decoration: none;
+  text-align: center;
+  /*margin: 0 auto;*/
+}

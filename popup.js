@@ -1,3 +1,5 @@
+var optionUrl = 'chrome-extension://hgnipldbfgigmbjpkpaapcpjjofhphbp/options.html';
+
 function sendStatus(status) {  
   chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
     chrome.tabs.sendMessage(tabs[0].id, { active: status });
@@ -7,6 +9,7 @@ function sendStatus(status) {
 document.addEventListener('DOMContentLoaded', function() {
   var button = document.getElementById('toggle-switch');
   var buttonClasses = button.classList;
+  var options = document.getElementById('options');
   var turnOn = "Enable";
   var turnOff = "Disable";
   var status;
@@ -49,39 +52,10 @@ document.addEventListener('DOMContentLoaded', function() {
       button.innerHTML = turnOff;
     }
   });
+
+  options.addEventListener('click', function() {
+    chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
+      chrome.tabs.update(tabs[0].id, { url: optionUrl });
+    });
+  });
 });
-
-
-
-
-
-
-
-
-
-
-
-// // DEFINE FUNCTIONS
-
-// function getCurrentTabUrl(countVisits) {
-
-//   var tabQueryInfo = {
-//     active: true,
-//     currentWindow: true
-//   };
-
-//   chrome.tabs.query(tabQueryInfo, function(tabs) {
-//     var tab = tabs[0];
-//     var url = tab.url;
-
-//     if (url) {
-//       countVisits(url);
-//       var address = document.getElementById('address');
-//       var fbCount = document.getElementById('fb-count');
-//       var twCount = document.getElementById('tw-count');
-//       address.innerHTML = url;
-//       fbCount.innerHTML = facebookVisits.toString();
-//       twCount.innerHTML = twitterVisits.toString();
-//     }
-//   });
-// }
