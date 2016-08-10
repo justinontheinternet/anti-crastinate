@@ -8,7 +8,7 @@
 
 var currentUrl = document.location.host;
 var currentTime = Date.parse(new Date());
-var visitLimit, blockLimit;
+var exploreLimit, blockLimit;
 
 // NOT CURRENTLY IMPLEMENTED. attempting to make blockSites more DRY. Issues with chrome.storage recognizing dynamic key names.
 function determineAccess(obj) {
@@ -22,12 +22,12 @@ function determineAccess(obj) {
       oldTime = info.key;
       difference = ((currentTime - oldTime) / 1000) / 60;
       console.log("info.key exists:", info.key, "oldTime:", oldTime);
-      if (visitLimit - difference < 5 && visitLimit - difference > 0) {
+      if (exploreLimit - difference < 5 && exploreLimit - difference > 0) {
         console.log("sending notification");
         chrome.runtime.sendMessage( { notify: true });
       }
 
-      if (difference > visitLimit && difference <= blockLimit) {
+      if (difference > exploreLimit && difference <= blockLimit) {
         console.log("restricting access");
         // var fbTimeRemaining = blockLimit - difference;
         // chrome.storage.sync.set({ 'fbTimeRemaining': fbTimeRemaining });
@@ -64,14 +64,14 @@ function blockSites() {
           oldTime = info.lastFacebookVisit;
           difference = ((currentTime - oldTime) / 1000) / 60;
           
-          if (visitLimit - difference < 5 && visitLimit - difference > 0) {
+          if (exploreLimit - difference < 5 && exploreLimit - difference > 0) {
             // send message to determine last url
             // het last url host
             // if last url host does not equal current url then send message to notify
             chrome.runtime.sendMessage({ notify: true });
           }
 
-          if (difference > visitLimit && difference <= blockLimit) {
+          if (difference > exploreLimit && difference <= blockLimit) {
             // var fbTimeRemaining = blockLimit - difference;
             // chrome.storage.sync.set({ 'fbTimeRemaining': fbTimeRemaining });
             chrome.runtime.sendMessage({ redirect: true });
@@ -91,11 +91,11 @@ function blockSites() {
           oldTime = info.lastTwitterVisit;
           difference = ((currentTime - oldTime) / 1000) / 60;
 
-          if (visitLimit - difference < 5 && visitLimit - difference > 0) {
+          if (exploreLimit - difference < 5 && exploreLimit - difference > 0) {
             chrome.runtime.sendMessage({ notify: true });
           }
 
-          if (difference > visitLimit && difference <= blockLimit) {
+          if (difference > exploreLimit && difference <= blockLimit) {
             // var twTimeRemaining = blockLimit - difference;
             // chrome.storage.sync.set({ 'twTimeRemaining': twTimeRemaining });
             chrome.runtime.sendMessage({ redirect: true });
@@ -112,12 +112,12 @@ function blockSites() {
 }
 
 // get time limit values
-chrome.storage.sync.get(['visitLimit', 'blockLimit'], function(data) {
-  if (!data.visitLimit) {
-    visitLimit = 20;
-    chrome.storage.sync.set({'visitLimit': '20'});
+chrome.storage.sync.get(['exploreLimit', 'blockLimit'], function(data) {
+  if (!data.exploreLimit) {
+    exploreLimit = 20;
+    chrome.storage.sync.set({'exploreLimit': '20'});
   } else {
-    visitLimit = parseInt(data.visitLimit);
+    exploreLimit = parseInt(data.exploreLimit);
   }
 
   if (!data.blockLimit) {

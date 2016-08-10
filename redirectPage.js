@@ -14,24 +14,17 @@ function extractDomain(url) {
   } else {
     domain = url.split('/')[0];
   }
-
   //find & remove port number
   domain = domain.split(':')[0];
 
   return domain;
-}
+};
 
 // if time limit is up or time left is less than 5 min, content script will send a message here, initiating a redirect or notification
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
   if (request.redirect === true) {
     chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
       chrome.tabs.update(tabs[0].id, { url: messageUrl });
-    });
-  }
-
-  if (request.getLastUrl === true) {
-    chrome.history.search({ text: '', maxResults: 2}, function(data) {
-      console.log(data);
     });
   }
 

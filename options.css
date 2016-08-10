@@ -80,10 +80,17 @@ button:hover {
 
 /* ERROR MESSAGE */
 
-#error {
-  color: red;
+#message {
   font-size: 15px;
   width: 100%;
   padding-top: 10px;
   text-align: center;
+}
+
+.error {
+  color: red;
+}
+
+.success {
+  color: green;
 }

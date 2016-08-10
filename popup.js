@@ -6,6 +6,7 @@ function sendStatus(status) {
 
 document.addEventListener('DOMContentLoaded', function() {
   var button = document.getElementById('toggle-switch');
+  var buttonClasses = button.classList;
   var turnOn = "Enable";
   var turnOff = "Disable";
   var status;
@@ -16,12 +17,17 @@ document.addEventListener('DOMContentLoaded', function() {
     if (data.active === undefined) {      
       status = true;
       chrome.storage.sync.set({ 'active': status });
+      buttonClasses.remove('enable');
+      buttonClasses.add('disable');
       button.innerHTML = turnOff;
-      // sendStatus(status);
-    } else if (data.active === true) {      
+    } else if (data.active === true) {
+      buttonClasses.remove('enable');
+      buttonClasses.add('disable');
       button.innerHTML = turnOff;
-    } else {      
+    } else {
       status === false;
+      buttonClasses.remove('disable');
+      buttonClasses.add('enable');
       button.innerHTML = turnOn;
     }
   });
@@ -31,11 +37,15 @@ document.addEventListener('DOMContentLoaded', function() {
       status = false;
       chrome.storage.sync.set({ 'active': status });
       sendStatus(status);
+      buttonClasses.remove('disable');
+      buttonClasses.add('enable');
       button.innerHTML = turnOn;
-    } else {      
+    } else {
       status = true;
       chrome.storage.sync.set({ 'active': status });
       sendStatus(status);
+      buttonClasses.remove('enable');
+      buttonClasses.add('disable');
       button.innerHTML = turnOff;
     }
   });
