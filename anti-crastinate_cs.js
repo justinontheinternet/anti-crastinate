@@ -8,20 +8,23 @@
 
 var currentUrl = document.location.host;
 var currentTime = Date.parse(new Date());
-var exploreLimit, blockLimit;
+var storage = chrome.storage.sync;
+var obj = {};
+var exploreLimit, blockLimit, lastSiteVisit;
 
 // NOT CURRENTLY IMPLEMENTED. attempting to make blockSites more DRY. Issues with chrome.storage recognizing dynamic key names.
 function determineAccess(obj) {
-  chrome.storage.sync.get(obj, function(info) {
-    console.log("inside determineAccess obj is:", obj, "info is:", info);
-    console.log("info.key", info.key, "number?", typeof(info.key));
+
+  console.log("lastSiteVisit:", lastSiteVisit);
+
+  storage.get(lastSiteVisit, function(info) {
     var oldTime, difference;
-    var lastSiteVisit = obj.key;
-    console.log("info.lastSiteVisit:", info.lastSiteVisit);
-    if (typeof(info.key) === 'number') {
-      oldTime = info.key;
+
+    if (typeof(info[lastSiteVisit]) === 'number') {
+      oldTime = info[lastSiteVisit];
+
       difference = ((currentTime - oldTime) / 1000) / 60;
-      console.log("info.key exists:", info.key, "oldTime:", oldTime);
+      console.log("oldTime:", oldTime);
       if (exploreLimit - difference < 5 && exploreLimit - difference > 0) {
         console.log("sending notification");
         chrome.runtime.sendMessage( { notify: true });
@@ -30,16 +33,19 @@ function determineAccess(obj) {
       if (difference > exploreLimit && difference <= blockLimit) {
         console.log("restricting access");
         // var fbTimeRemaining = blockLimit - difference;
-        // chrome.storage.sync.set({ 'fbTimeRemaining': fbTimeRemaining });
+        // storage.set({ 'fbTimeRemaining': fbTimeRemaining });
         chrome.runtime.sendMessage({ redirect: true });
       } else if (difference > blockLimit) {
         console.log("allow visit. key is:", key);
-        chrome.storage.sync.set({ key : currentTime });
+        storage.set(obj);
       }
       
     } else {
-      console.log("first visit. lastSiteVisit is:", lastSiteVisit, "currentTime:", currentTime, "obj.key:", obj.key);
-      chrome.storage.sync.set({ lastSiteVisit : currentTime });
+      console.log("first visit. lastSiteVisit is:", lastSiteVisit, "currentTime:", currentTime, "obj:", obj, "info:", info);
+      // SAVE WHOLE OBJECT AND THEN SET
+        // lastSiteVisit = 'lastFacebookVisit';
+        // obj[lastSiteVisit] = currentTime;
+      storage.set(obj);
     }
   });
 }
@@ -50,86 +56,88 @@ function blockSites() {
   switch(currentUrl) {
     case "www.facebook.com":
     // Commented out section for use with determineAccess function above
-      // var obj = {};
-      // var prop = 'key';
-      // var key = 'lastFacebookVisit';
-      // obj[prop] = key;
+      lastSiteVisit = 'lastFacebookVisit';
+      obj[lastSiteVisit] = currentTime
 
-      // determineAccess(obj);
+      determineAccess(obj);
 
-      chrome.storage.sync.get('lastFacebookVisit', function(info) {
-        var oldTime, difference;
+      // storage.get('lastFacebookVisit', function(info) {
+      //   var oldTime, difference;
 
-        if (info.lastFacebookVisit) {
-          oldTime = info.lastFacebookVisit;
-          difference = ((currentTime - oldTime) / 1000) / 60;
+      //   if (info.lastFacebookVisit) {
+      //     oldTime = info.lastFacebookVisit;
+      //     difference = ((currentTime - oldTime) / 1000) / 60;
           
-          if (exploreLimit - difference < 5 && exploreLimit - difference > 0) {
-            // send message to determine last url
-            // het last url host
-            // if last url host does not equal current url then send message to notify
-            chrome.runtime.sendMessage({ notify: true });
-          }
+      //     if (exploreLimit - difference < 5 && exploreLimit - difference > 0) {
+      //       // send message to determine last url
+      //       // het last url host
+      //       // if last url host does not equal current url then send message to notify
+      //       chrome.runtime.sendMessage({ notify: true });
+      //     }
 
-          if (difference > exploreLimit && difference <= blockLimit) {
-            // var fbTimeRemaining = blockLimit - difference;
-            // chrome.storage.sync.set({ 'fbTimeRemaining': fbTimeRemaining });
-            chrome.runtime.sendMessage({ redirect: true });
-          } else if (difference > blockLimit) {
-            chrome.storage.sync.set({ 'lastFacebookVisit': currentTime });
-          }
+      //     if (difference > exploreLimit && difference <= blockLimit) {
+      //       // var fbTimeRemaining = blockLimit - difference;
+      //       // storage.set({ 'fbTimeRemaining': fbTimeRemaining });
+      //       chrome.runtime.sendMessage({ redirect: true });
+      //     } else if (difference > blockLimit) {
+      //       storage.set({ 'lastFacebookVisit': currentTime });
+      //     }
           
-        } else {
-          chrome.storage.sync.set({ 'lastFacebookVisit': currentTime });
-        }
-      });
+      //   } else {
+      //     storage.set({ 'lastFacebookVisit': currentTime });
+      //   }
+      // });
       break;
     case "twitter.com":
-      chrome.storage.sync.get('lastTwitterVisit', function(info) {
-        var oldTime, difference;
-        if (info.lastTwitterVisit) {
-          oldTime = info.lastTwitterVisit;
-          difference = ((currentTime - oldTime) / 1000) / 60;
+      lastSiteVisit = 'lastTwitterVisit';
+      obj[lastSiteVisit] = currentTime
 
-          if (exploreLimit - difference < 5 && exploreLimit - difference > 0) {
-            chrome.runtime.sendMessage({ notify: true });
-          }
+      determineAccess(obj);
+      // storage.get('lastTwitterVisit', function(info) {
+      //   var oldTime, difference;
+      //   if (info.lastTwitterVisit) {
+      //     oldTime = info.lastTwitterVisit;
+      //     difference = ((currentTime - oldTime) / 1000) / 60;
 
-          if (difference > exploreLimit && difference <= blockLimit) {
-            // var twTimeRemaining = blockLimit - difference;
-            // chrome.storage.sync.set({ 'twTimeRemaining': twTimeRemaining });
-            chrome.runtime.sendMessage({ redirect: true });
-          } else if (difference > blockLimit) {
-            chrome.storage.sync.set({ 'lastTwitterVisit': currentTime });
-          }
+      //     if (exploreLimit - difference < 5 && exploreLimit - difference > 0) {
+      //       chrome.runtime.sendMessage({ notify: true });
+      //     }
+
+      //     if (difference > exploreLimit && difference <= blockLimit) {
+      //       // var twTimeRemaining = blockLimit - difference;
+      //       // storage.set({ 'twTimeRemaining': twTimeRemaining });
+      //       chrome.runtime.sendMessage({ redirect: true });
+      //     } else if (difference > blockLimit) {
+      //       storage.set({ 'lastTwitterVisit': currentTime });
+      //     }
           
-        } else {
-          chrome.storage.sync.set({ 'lastTwitterVisit': currentTime });
-        }
-      });
+      //   } else {
+      //     storage.set({ 'lastTwitterVisit': currentTime });
+      //   }
+      // });
       break;
   }
 }
 
 // get time limit values
-chrome.storage.sync.get(['exploreLimit', 'blockLimit'], function(data) {
+storage.get(['exploreLimit', 'blockLimit'], function(data) {
   if (!data.exploreLimit) {
     exploreLimit = 20;
-    chrome.storage.sync.set({'exploreLimit': '20'});
+    storage.set({'exploreLimit': '20'});
   } else {
     exploreLimit = parseInt(data.exploreLimit);
   }
 
   if (!data.blockLimit) {
     blockLimit = 180;
-    chrome.storage.sync.set({'blockLimit': '180'});
+    storage.set({'blockLimit': '180'});
   } else {
     blockLimit = parseInt(data.blockLimit);
   }
 });
 
 // when no message from popup, run check and blockSites()
-chrome.storage.sync.get('active', function(data) {
+storage.get('active', function(data) {
   if (data.active === true || data.active === undefined) {
     blockSites();
   }
