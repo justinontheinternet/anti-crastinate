@@ -13,6 +13,7 @@ function fadeOut(ele) {
 }
 
 document.addEventListener('DOMContentLoaded', function() {
+  
   var visitInput = document.getElementById('visit-limit');
   var blockInput = document.getElementById('block-limit');
   var submit = document.getElementById('submit');

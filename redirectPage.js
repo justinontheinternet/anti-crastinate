@@ -32,6 +32,7 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
     chrome.history.search({ text: '', maxResults: 2}, function(data) {
       var currentPage = extractDomain(data[0].url);
       var lastPage = extractDomain(data[1].url);
+      console.log("currentPage", currentPage, "lastPage", lastPage);
 
       if (currentPage !== lastPage) {
         chrome.notifications.create('success', notification, function() {});

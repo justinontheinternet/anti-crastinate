@@ -1,6 +1,6 @@
 Improvements to be made
 
-- make code in anti-crastinate_cs.js more DRY. learn to use dynamic variable for key in storage.
-  - allow user to add more sites to block list
+- allow user to add more sites to block list
+- limit notifications to once per domain visit. (show on refresh if previous domain was different)
 - able to occasionally circumvent site blocking by typing address slowly
-- able to circumbent site blocking by clicking link to page
+- able to circumvent site blocking by clicking link to page

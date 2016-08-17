@@ -35,7 +35,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   });
 
-  button.addEventListener('click', function() {    
+  button.addEventListener('click', function() {
     if (button.innerHTML === turnOff) {      
       status = false;
       chrome.storage.sync.set({ 'active': status });
