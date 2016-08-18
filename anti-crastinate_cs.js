@@ -44,22 +44,44 @@ function determineAccess(obj) {
 }
 
 
+function extractDomain(url) {
+  var domain;
+  // if '://' occurs, split and take third item in resulting array
+  if (url.indexOf("www.") > -1) {
+    domain = url.split('.')[1];
+    domain = domain.charAt(0).toUpperCase() + domain.slice(1);
+  } else {
+    domain = url.split('.')[0];
+    domain = domain.charAt(0).toUpperCase() + domain.slice(1);
+  }
+  //find & remove port number
+  domain = domain.split(':')[0];
+
+  return domain;
+};
+
 // setting key for each site on block list
 function blockSites() {
-  switch(currentUrl) {
-    case "www.facebook.com":
-      lastSiteVisit = 'lastFacebookVisit';
-      obj[lastSiteVisit] = currentTime
+  lastSiteVisit = 'last' + extractDomain(currentUrl) + 'Visit';
+  obj[lastSiteVisit] = currentTime;
 
-      determineAccess(obj);
-      break;
-    case "twitter.com":
-      lastSiteVisit = 'lastTwitterVisit';
-      obj[lastSiteVisit] = currentTime
+  determineAccess(obj);
 
-      determineAccess(obj);
-      break;
-  }
+
+  // switch(currentUrl) {
+  //   case "www.facebook.com":
+  //     lastSiteVisit = 'lastFacebookVisit';
+  //     obj[lastSiteVisit] = currentTime
+
+  //     determineAccess(obj);
+  //     break;
+  //   case "twitter.com":
+  //     lastSiteVisit = 'lastTwitterVisit';
+  //     obj[lastSiteVisit] = currentTime
+
+  //     determineAccess(obj);
+  //     break;
+  // }
 }
 
 // get time limit values
