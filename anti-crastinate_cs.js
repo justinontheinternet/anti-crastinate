@@ -27,8 +27,6 @@ function determineAccess(obj) {
 
       if (difference > exploreLimit && difference <= blockLimit) {
         // restricting access
-          // var fbTimeRemaining = blockLimit - difference;
-          // storage.set({ 'fbTimeRemaining': fbTimeRemaining });
         chrome.runtime.sendMessage({ redirect: true });
       } else if (difference > blockLimit) {
         // allow visit if time limit has passed

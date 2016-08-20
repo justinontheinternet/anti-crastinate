@@ -20,19 +20,18 @@ function extractDomain(url) {
   return domain;
 };
 
-// if time limit is up or time left is less than 5 min, content script will send a message here, initiating a redirect or notification
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
+  // if time limit is up content script will send a message here, initiating a redirect
   if (request.redirect === true) {
     chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
       chrome.tabs.update(tabs[0].id, { url: messageUrl });
     });
   }
-
+  // time left is less than 5 min, initiate a notification
   if (request.notify === true) {
     chrome.history.search({ text: '', maxResults: 2}, function(data) {
       var currentPage = extractDomain(data[0].url);
       var lastPage = extractDomain(data[1].url);
-      console.log("currentPage", currentPage, "lastPage", lastPage);
 
       if (currentPage !== lastPage) {
         chrome.notifications.create('success', notification, function() {});
